@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "posts")
 public class Post {
 
     @Id
@@ -27,6 +28,11 @@ public class Post {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_user_post"))
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    //Setter
     public void changeTitle(String title) {
         this.title = title;
     }
@@ -39,5 +45,11 @@ public class Post {
         this.user = user;
         user.mappingPost(this);
     }
+
+    public void mappingCategory(Category category) {
+        this.category = category;
+        category.mappingPost(this);
+    }
+
 
 }

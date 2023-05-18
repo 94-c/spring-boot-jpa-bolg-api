@@ -4,19 +4,25 @@ import com.blog.api.dto.PostDto;
 import com.blog.api.response.SuccessResponse;
 import com.blog.api.service.PostService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class PostController {
 
     private final PostService postService;
 
     @PostMapping("/posts")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SuccessResponse<PostDto> createPost(@RequestBody PostDto postDTO) {
-        PostDto post = postService.createPost(postDTO);
+    public SuccessResponse<PostDto> createPost(@RequestBody PostDto postDTO, Principal principal) {
+        log.info(principal.getName());
+
+        PostDto post = postService.createPost(postDTO, principal.getName());
 
         return SuccessResponse.success(post);
     }

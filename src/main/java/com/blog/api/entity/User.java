@@ -11,10 +11,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
+@Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
