@@ -3,6 +3,7 @@ package com.blog.api.service;
 import com.blog.api.dto.PostDto;
 import com.blog.api.entity.Post;
 import com.blog.api.entity.User;
+import com.blog.api.entity.common.LocalDate;
 import com.blog.api.exception.PostNotFoundException;
 import com.blog.api.repository.CategoryRepository;
 import com.blog.api.repository.PostRepository;
@@ -37,7 +38,9 @@ public class PostService {
         Post post = Post.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .createdAt(LocalDateTime.now())
+                .date(LocalDate.builder()
+                        .createdAt(LocalDateTime.now())
+                        .build())
                 .build();
 
         post.mappingUser(user);
@@ -60,16 +63,18 @@ public class PostService {
                 .id(findPost.getId())
                 .title(findPost.getTitle())
                 .content(findPost.getContent())
-                .createdAt(findPost.getCreatedAt().toString())
+                .createdAt(findPost.getDate().toString())
                 .build();
     }
 
     public PostDto updatePost(Long postId, PostDto dto) {
         Optional<Post> byId = postRepository.findById(postId);
+
         Post post = byId.orElseThrow(() -> new PostNotFoundException("해당 포스트가 존재하지 않습니다."));
 
         post.changeTitle(dto.getTitle());
         post.changeContent(dto.getContent());
+        post.getDate().changeUpdateAt(LocalDateTime.now());
 
         return PostDto.builder()
                 .id(post.getId())

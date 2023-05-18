@@ -1,5 +1,6 @@
 package com.blog.api.entity;
 
+import com.blog.api.entity.common.LocalDate;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,8 +29,8 @@ public class User implements UserDetails {
 
     private String name;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Embedded
+    private LocalDate date;
 
     @Builder.Default
     private String role = "ROLE_USER";
@@ -42,15 +43,21 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Post> posts = new ArrayList<>();
 
-    public void encryptPassword(String password) {
-
-        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     public void mappingPost(Post post) {
         posts.add(post);
     }
 
+    public void mappingComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public void encryptPassword(String password) {
+
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> auth = new HashSet<>();

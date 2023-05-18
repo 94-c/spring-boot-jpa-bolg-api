@@ -1,5 +1,6 @@
 package com.blog.api.dto;
 
+import com.blog.api.entity.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -21,6 +22,14 @@ public class UserDto {
     private String name;
 
     private LocalDateTime createdAt;
+
+    public static UserDto convertToUserDTO(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .build();
+    }
 
 
 }

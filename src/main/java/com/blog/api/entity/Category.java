@@ -1,5 +1,6 @@
 package com.blog.api.entity;
 
+import com.blog.api.entity.common.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +30,9 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Post> posts = new ArrayList<>();
+
+    @Embedded
+    private LocalDate date;
 
     public void mappingPost(Post post) {
         this.posts.add(post);
