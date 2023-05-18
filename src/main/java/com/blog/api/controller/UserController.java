@@ -9,6 +9,7 @@ import com.blog.api.jwt.provider.TokenProvider;
 import com.blog.api.response.SuccessResponse;
 import com.blog.api.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;

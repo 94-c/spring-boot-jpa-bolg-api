@@ -2,6 +2,7 @@ package com.blog.api.service;
 
 import com.blog.api.dto.SingUpDto;
 import com.blog.api.entity.User;
+import com.blog.api.entity.common.LocalDate;
 import com.blog.api.exception.UserNotFoundException;
 import com.blog.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,9 @@ public class UserService implements UserDetailsService {
         User user = User.builder()
                 .email(signupDTO.getEmail())
                 .name(signupDTO.getNickname())
-                .createdAt(LocalDateTime.now())
+                .date(LocalDate.builder()
+                        .createdAt(LocalDateTime.now())
+                        .build())
                 .enabled(true)
                 .build();
 

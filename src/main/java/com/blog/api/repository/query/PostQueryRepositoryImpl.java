@@ -23,16 +23,15 @@ import static com.blog.api.entity.QUser.user;
 public class PostQueryRepositoryImpl implements PostQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
-    private final Map<String, OrderType> orderTypeMap;
-    private final Map<String, SearchType> searchTypeMap;
 
     @Override
     public List<Post> postListQueryDSL(SearchDto searchDto) {
         BooleanExpression postCategoryQuery = postCategoryQuery(searchDto.getCategory());
+        BooleanExpression postSearchQuery = postSearchQuery(searchDto);
 
         List<Post> posts = jpaQueryFactory
                 .selectFrom(post)
-                .where(postCategoryQuery)
+                .where(postCategoryQuery, postSearchQuery)
                 .join(post.user, user).fetchJoin()
                 .join(post.category, category).fetchJoin()
                 .fetch();
@@ -51,6 +50,16 @@ public class PostQueryRepositoryImpl implements PostQueryRepository {
         }
 
         return null;
+    }
+
+    private BooleanExpression postSearchQuery(SearchDto searchDTO) {
+        SearchType searchType = SearchType.convertToType(searchDTO.getSearchType());
+
+        if (searchType == SearchType.USER) {
+            return user.name.eq(searchDTO.getQuery());
+        }
+        return post.title.contains(searchDTO.getQuery());
+
     }
     private Category getPostCategoryQuery(String name) {
         return jpaQueryFactory

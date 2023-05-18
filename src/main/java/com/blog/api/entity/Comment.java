@@ -43,4 +43,7 @@ public class Comment {
         user.mappingComment(this);
     }
 
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }

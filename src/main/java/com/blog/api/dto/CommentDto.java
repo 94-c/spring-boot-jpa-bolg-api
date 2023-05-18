@@ -4,6 +4,9 @@ import com.blog.api.entity.Comment;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,6 +26,13 @@ public class CommentDto {
                 .content(comment.getContent())
                 .user(UserDto.convertToUserDTO(comment.getUser()))
                 .build();
+    }
+
+    //Entity To DtoList
+    public static List<CommentDto> convertToCommentDtoList(List<Comment> comments) {
+        Stream<Comment> stream = comments.stream();
+
+        return stream.map(CommentDto::converToCommentDto).collect(Collectors.toList());
     }
 
 
