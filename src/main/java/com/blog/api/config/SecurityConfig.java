@@ -1,10 +1,18 @@
 package com.blog.api.config;
 
+import com.blog.api.filter.JwtFilter;
+import com.blog.api.jwt.JwtAccessDeniedHandler;
+import com.blog.api.jwt.JwtAuthenticationEntryPoint;
+import com.blog.api.jwt.provider.TokenProvider;
+import com.blog.api.jwt.provider.UserAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @RequiredArgsConstructor

@@ -46,6 +46,9 @@ public class User implements UserDetails {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
+    public void mappingPost(Post post) {
+        posts.add(post);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -23,6 +23,10 @@ public class Post {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_user_post"))
+    private User user;
+
     public void changeTitle(String title) {
         this.title = title;
     }
@@ -30,4 +34,10 @@ public class Post {
     public void changeContent(String content) {
         this.content = content;
     }
+
+    public void mappingUser(User user) {
+        this.user = user;
+        user.mappingPost(this);
+    }
+
 }
