@@ -1,7 +1,9 @@
 package com.blog.api.controller;
 
+import com.blog.api.dto.CertificationDto;
 import com.blog.api.service.CertificationService;
 import com.blog.api.service.EmailTokenService;
+import com.blog.api.util.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,8 +23,10 @@ public class CertificationController {
 
     @GetMapping("confirm-email")
     @ResponseStatus(HttpStatus.OK)
-    public Boolean viewConfirmEmail(@RequestParam String token) {
+    public SuccessResponse<Boolean> viewConfirmEmail(@RequestParam String token) {
 
-        return certificationService.verifyEmail(token);
+        CertificationDto result = certificationService.verifyEmail(token);
+
+        return SuccessResponse.success(result);
     }
 }

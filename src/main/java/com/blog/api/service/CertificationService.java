@@ -1,5 +1,7 @@
 package com.blog.api.service;
 
+import com.blog.api.dto.CertificationDto;
+import com.blog.api.dto.UserDto;
 import com.blog.api.entity.Certification;
 import com.blog.api.entity.User;
 import com.blog.api.repository.UserRepository;
@@ -19,18 +21,17 @@ public class CertificationService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public boolean verifyEmail(String token) {
+    public CertificationDto verifyEmail(String token) {
         Certification findByEmailToken = emailTokenService.findByIdAndExpirationDateAfterAndExpired(token);
 
         Optional<User> findByUser = userRepository.findById(findByEmailToken.getUserId());
         findByEmailToken.setTokenToUsed();
 
-        if (findByUser.isPresent()) {
-            User user = findByUser.get();
-            user.isEnabled();
-            return true;
-        } else {
-            throw new RuntimeException("토큰 에러");
-        }
+        return CertificationDto.builder()
+                .id(findByEmailToken.getId())
+                .userEmail(findByUser.get().getEmail())
+                .expirationDate(findByEmailToken.getExpirationDate())
+                .createdAt(findByEmailToken.getDate().getCreatedAt())
+                .build();
     }
 }
