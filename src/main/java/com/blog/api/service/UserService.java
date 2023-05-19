@@ -21,6 +21,7 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final EmailTokenService emailTokenService;
 
     public User createUser(SingUpDto signupDTO) {
         User user = User.builder()
@@ -35,7 +36,11 @@ public class UserService implements UserDetailsService {
 
         user.encryptPassword(signupDTO.getPassword());
 
-        return userRepository.save(user);
+        User createUser = userRepository.save(user);
+
+        emailTokenService.createEmailToken(createUser.getId(), createUser.getEmail());
+
+        return createUser;
     }
 
     @Override

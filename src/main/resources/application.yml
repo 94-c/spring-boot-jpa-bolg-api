@@ -16,6 +16,19 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
 
+  mail:
+    host: "sandbox.smtp.mailtrap.io"
+    port: 2525
+    username: "d8ffd2a2082783"
+    password: "35d7b6d03152c0"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 jwt:
   header: Authorization
   #HS512 ????? ??? ??? ??? 512bit, ? 64byte ??? secret key? ???? ??.
