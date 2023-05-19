@@ -9,10 +9,13 @@ import com.blog.api.exception.PostNotFoundException;
 import com.blog.api.repository.CategoryRepository;
 import com.blog.api.repository.PostRepository;
 import com.blog.api.repository.UserRepository;
+import com.blog.api.util.resource.PostResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,25 +43,37 @@ public class PostService {
         return user;
     }
 
+    //TODO 검색 기능 사용 예정
     @Transactional(readOnly = true)
-    public List<PostDto> findAllPostList(SearchDto searchDto) {
-        Stream<Post> stream = postRepository.postListQueryDSL(searchDto).stream();
+    public PostResource findAllPosts(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
-        return stream.map(PostDto::convertToPostDTO).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<Post> posts = postRepository.findAll(pageable);
+
+        List<Post> listOfPosts = posts.getContent();
+
+        List<PostDto> content = listOfPosts.stream().map(PostDto::convertToPostDTO).collect(Collectors.toList());
+
+        PostResource postResource = new PostResource();
+
+        postResource.setContent(content);
+        postResource.setPageNo(pageNo);
+        postResource.setPageSize(pageSize);
+        postResource.setTotalElements(posts.getTotalElements());
+        postResource.setTotalPages(posts.getTotalPages());
+        postResource.setLast(postResource.isLast());
+
+        return postResource;
     }
-
-    @Transactional(readOnly = true)
-    public Page<PostDto> getPostsList(SearchDto searchDto, Pageable pageable) {
-        Page<Post> posts = postRepository.postListPagingQueryDSL(searchDto, pageable);
-
-        return posts.map(PostDto::convertToPostDTO);
-    }
-
 
     public PostDto createPost(PostDto dto, String email) {
-        User user = getUserInfo(email);
+        User findUser = getUserInfo(email);
 
         Post post = Post.builder()
+                .user(findUser)
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .date(LocalDate.builder()
@@ -66,51 +81,54 @@ public class PostService {
                         .build())
                 .build();
 
-        post.mappingUser(user);
-        post.mappingCategory(categoryRepository.findByName(dto.getCategory()));
-
         Post createPost = postRepository.save(post);
 
         return PostDto.builder()
                 .id(createPost.getId())
+                .title(createPost.getTitle())
+                .content(createPost.getContent())
+                .createdAt(createPost.getDate().getCreatedAt())
                 .build();
     }
-
 
     public PostDto getPost(Long postId) {
         Optional<Post> findById = postRepository.findById(postId);
 
         Post findPost = findById.orElseThrow(() -> new PostNotFoundException("해당 포스트가 존재하지 않습니다."));
+
         List<CommentDto> commentDtos = CommentDto.convertToCommentDtoList(findPost.getComments());
 
         return PostDto.builder()
                 .id(findPost.getId())
-                .category(findPost.getCategory().getName())
                 .user(UserDto.convertToUserDTO(findPost.getUser()))
                 .title(findPost.getTitle())
                 .content(findPost.getContent())
                 .commentList(commentDtos)
-                .createdAt(findPost.getDate().toString())
+                .createdAt(findPost.getDate().getCreatedAt())
                 .build();
     }
 
     public PostDto updatePost(Long postId, PostDto dto) {
-        Optional<Post> findById = postRepository.findById(postId);
+        Optional<Post> findPost = postRepository.findById(postId);
 
-        Post post = findById.orElseThrow(() -> new PostNotFoundException("해당 포스트가 존재하지 않습니다."));
+        Post post = findPost.orElseThrow(() -> new PostNotFoundException("해당 포스트가 존재하지 않습니다."));
 
         post.changeTitle(dto.getTitle());
         post.changeContent(dto.getContent());
         post.getDate().changeUpdateAt(LocalDateTime.now());
 
+        Post updatePost = postRepository.save(post);
+
         return PostDto.builder()
-                .id(post.getId())
+                .id(updatePost.getId())
+                .user(UserDto.convertToUserDTO(updatePost.getUser()))
+                .title(updatePost.getTitle())
+                .content(updatePost.getContent())
+                .createdAt(updatePost.getDate().getCreatedAt())
+                .updatedAt(updatePost.getDate().getUpdateAt())
                 .build();
     }
 
-    /*
-        TODO 각 서비스별 CRUD 권한인 principal에 대하여 적용 해야함
-     */
     public void deletePost(Long postId) {
         Optional<Post> byId = postRepository.findById(postId);
         Post post = byId.orElseThrow(() -> new PostNotFoundException("해당 포스트가 존재하지 않습니다."));

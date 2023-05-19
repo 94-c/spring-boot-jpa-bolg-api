@@ -5,6 +5,7 @@ import com.blog.api.dto.SearchDto;
 import com.blog.api.response.SuccessResponse;
 import com.blog.api.service.PostService;
 import com.blog.api.util.PagingUtil;
+import com.blog.api.util.resource.PostResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,10 +23,13 @@ public class PostController {
 
     @GetMapping("/posts")
     @ResponseStatus(value = HttpStatus.OK)
-    public SuccessResponse<Page<PostDto>> getPostList(SearchDto searchDto, PagingUtil pagingUtil) {
-        Page<PostDto> postListPaging = postService.getPostsList(searchDto, pagingUtil.of());
+    public PostResource getAllPosts(
+            @RequestParam(value = "pageNo", defaultValue = PagingUtil.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = PagingUtil.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = PagingUtil.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = PagingUtil.DEFAULT_SORT_DIREACTION, required = false) String sortDir) {
 
-        return SuccessResponse.success(postListPaging);
+        return postService.findAllPosts(pageNo, pageSize, sortBy, sortDir);
     }
 
     @PostMapping("/posts")

@@ -14,13 +14,6 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class PostDto {
-    private static final int SEC = 60;
-    private static final int MIN = 60;
-    private static final int HOUR = 24;
-    private static final int DAY = 30;
-    private static final int MONTH = 12;
-
-
     private Long id;
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
@@ -29,8 +22,9 @@ public class PostDto {
 
     private Long viewCount;
 
-    private String createdAt;
+    private LocalDateTime createdAt;
 
+    private LocalDateTime updatedAt;
     private UserDto user;
     @NotBlank(message = "카테고리를 선택해주세요.")
     private String category;
@@ -42,32 +36,9 @@ public class PostDto {
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .createdAt(formatTimeString(post.getDate().getCreatedAt()))
+                .createdAt(post.getDate().getCreatedAt())
                 .user(UserDto.convertToUserDTO(post.getUser()))
-                .category(CategoryDto.convertToCategoryDto(post.getCategory()).getName())
+                //.category(CategoryDto.convertToCategoryDto(post.getCategory()).getName())
                 .build();
-    }
-
-    private static String formatTimeString(LocalDateTime time) {
-        String msg;
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        long seconds = Duration.between(time, currentTime).getSeconds();
-
-        if (seconds < SEC) {
-            msg = seconds + "초 전";
-        } else if (seconds / SEC < MIN) {
-            msg = seconds / SEC + "분 전";
-        } else if (seconds / (SEC * MIN) < HOUR) {
-            msg = seconds / (SEC * MIN) + "시간 전";
-        } else if (seconds / (SEC * MIN * HOUR) < DAY) {
-            msg = seconds / (SEC * MIN * HOUR) + "일 전";
-        } else if (seconds / (SEC * MIN * HOUR * MONTH) < MONTH) {
-            msg = seconds / (SEC * MIN * HOUR * MONTH) + "개월 전";
-        } else {
-            msg = seconds / (SEC * MIN * HOUR * MONTH) + "년 전";
-        }
-
-        return msg;
     }
 }
