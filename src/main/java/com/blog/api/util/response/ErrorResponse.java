@@ -1,4 +1,4 @@
-package com.blog.api.response;
+package com.blog.api.util.response;
 
 import com.blog.api.util.CustomError;
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -1,7 +1,7 @@
 package com.blog.api.controller;
 
 import com.blog.api.dto.CommentDto;
-import com.blog.api.response.SuccessResponse;
+import com.blog.api.util.response.SuccessResponse;
 import com.blog.api.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

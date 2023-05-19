@@ -1,9 +1,8 @@
 package com.blog.api.jwt;
 
-import com.blog.api.response.ErrorResponse;
+import com.blog.api.util.response.ErrorResponse;
 import com.blog.api.util.CustomError;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

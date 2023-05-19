@@ -1,9 +1,8 @@
 package com.blog.api.controller;
 
 import com.blog.api.dto.CategoryDto;
-import com.blog.api.response.SuccessResponse;
+import com.blog.api.util.response.SuccessResponse;
 import com.blog.api.service.CategoryService;
-import com.blog.api.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;

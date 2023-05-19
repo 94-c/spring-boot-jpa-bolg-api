@@ -6,7 +6,7 @@ import com.blog.api.dto.TokenDto;
 import com.blog.api.dto.UserDto;
 import com.blog.api.entity.User;
 import com.blog.api.jwt.provider.TokenProvider;
-import com.blog.api.response.SuccessResponse;
+import com.blog.api.util.response.SuccessResponse;
 import com.blog.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

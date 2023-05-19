@@ -1,7 +1,7 @@
 package com.blog.api.controller;
 
 import com.blog.api.dto.PostDto;
-import com.blog.api.response.SuccessResponse;
+import com.blog.api.util.response.SuccessResponse;
 import com.blog.api.service.PostService;
 import com.blog.api.util.PagingUtil;
 import com.blog.api.util.resource.PageResource;
