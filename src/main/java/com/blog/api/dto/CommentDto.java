@@ -4,6 +4,7 @@ import com.blog.api.entity.Comment;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,6 +19,9 @@ public class CommentDto {
     @NotBlank
     private String content;
     private UserDto user;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
 
     // Entity To Dto
     public static CommentDto converToCommentDto(Comment comment) {

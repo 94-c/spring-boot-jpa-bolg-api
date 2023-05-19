@@ -64,6 +64,8 @@ public class CommentService {
                 .id(comment.getId())
                 .content(comment.getContent())
                 .user(UserDto.convertToUserDTO(findByComment.get().getUser()))
+                .createdAt(comment.getDate().getCreatedAt())
+                .updatedAt(comment.getDate().getUpdateAt())
                 .build();
     }
 
@@ -77,9 +79,15 @@ public class CommentService {
         Comment comment = findByComment.orElseThrow(() -> new CommentNotFoundException("해당 댓글이 존재하지 않습니다."));
 
         comment.changeContent(dto.getContent());
+        comment.getDate().changeUpdateAt(LocalDateTime.now());
+
+        Comment updateComment = commentRepository.save(comment);
 
         return CommentDto.builder()
-                .id(comment.getId())
+                .id(updateComment.getId())
+                .content(updateComment.getContent())
+                .user(UserDto.convertToUserDTO(updateComment.getUser()))
+                .updatedAt(updateComment.getDate().getUpdateAt())
                 .build();
     }
 
