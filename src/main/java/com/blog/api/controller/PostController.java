@@ -1,17 +1,16 @@
 package com.blog.api.controller;
 
 import com.blog.api.dto.PostDto;
-import com.blog.api.dto.SearchDto;
 import com.blog.api.response.SuccessResponse;
 import com.blog.api.service.PostService;
 import com.blog.api.util.PagingUtil;
-import com.blog.api.util.resource.PostResource;
+import com.blog.api.util.resource.PageResource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
@@ -21,9 +20,9 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/posts")
+    @GetMapping("posts")
     @ResponseStatus(value = HttpStatus.OK)
-    public PostResource getAllPosts(
+    public PageResource<PostDto> getAllPosts(
             @RequestParam(value = "pageNo", defaultValue = PagingUtil.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = PagingUtil.DEFAULT_PAGE_SIZE, required = false) int pageSize,
             @RequestParam(value = "sortBy", defaultValue = PagingUtil.DEFAULT_SORT_BY, required = false) String sortBy,
@@ -32,9 +31,9 @@ public class PostController {
         return postService.findAllPosts(pageNo, pageSize, sortBy, sortDir);
     }
 
-    @PostMapping("/posts")
+    @PostMapping("posts")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SuccessResponse<PostDto> createPost(@RequestBody PostDto postDTO, Principal principal) {
+    public SuccessResponse<PostDto> createPost(@Valid @RequestBody PostDto postDTO, Principal principal) {
         log.info(principal.getName());
 
         PostDto post = postService.createPost(postDTO, principal.getName());
@@ -52,10 +51,10 @@ public class PostController {
 
     @PutMapping("posts/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public SuccessResponse<PostDto> updatePost(@RequestBody PostDto postDTO, @PathVariable(name = "id") Long postId) {
-        PostDto postDTOResponse = postService.updatePost(postId, postDTO);
+    public SuccessResponse<PostDto> updatePost(@Valid @RequestBody PostDto postDTO, @PathVariable(name = "id") Long postId) {
+        PostDto post = postService.updatePost(postId, postDTO);
 
-        return SuccessResponse.success(postDTOResponse);
+        return SuccessResponse.success(post);
     }
 
     @DeleteMapping("posts/{id}")

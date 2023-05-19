@@ -12,9 +12,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostResource {
+public class PageResource<T> {
 
-    private List<PostDto> content;
+    private List<T> content;
     private int pageNo;
     private int pageSize;
     private long totalElements;

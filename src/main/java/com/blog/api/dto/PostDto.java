@@ -31,12 +31,13 @@ public class PostDto {
 
     private List<CommentDto> commentList;
 
-    public static PostDto convertToPostDTO(Post post) {
+    public static PostDto convertToPostDto(Post post) {
         return PostDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdAt(post.getDate().getCreatedAt())
+                .updatedAt(post.getDate().getUpdateAt())
                 .user(UserDto.convertToUserDTO(post.getUser()))
                 //.category(CategoryDto.convertToCategoryDto(post.getCategory()).getName())
                 .build();

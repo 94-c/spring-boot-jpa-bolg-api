@@ -3,7 +3,7 @@ package com.blog.api.service;
 import com.blog.api.dto.SingUpDto;
 import com.blog.api.entity.User;
 import com.blog.api.entity.common.LocalDate;
-import com.blog.api.exception.UserNotFoundException;
+import com.blog.api.exception.NotFoundException;
 import com.blog.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> findByEmail = userRepository.findByEmail(email);
 
-        User user = findByEmail.orElseThrow(() -> new UserNotFoundException("이메일나 비밀번호가 틀립니다."));
+        User user = findByEmail.orElseThrow(() -> new NotFoundException(403, "이메일이나 비밀번호가 틀립니다."));
 
         log.debug(String.valueOf(user.isEnabled()));
 

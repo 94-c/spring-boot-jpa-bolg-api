@@ -46,12 +46,19 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Notification> notifications = new ArrayList<>();
+
     public void mappingPost(Post post) {
         posts.add(post);
     }
 
     public void mappingComment(Comment comment) {
         comments.add(comment);
+    }
+
+    public void mappingNotification(Notification notification) {
+        notifications.add(notification);
     }
 
     public void encryptPassword(String password) {

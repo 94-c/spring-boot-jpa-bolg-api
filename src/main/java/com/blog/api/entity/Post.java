@@ -47,11 +47,6 @@ public class Post {
         this.content = content;
     }
 
-    public void mappingUser(User user) {
-        this.user = user;
-        user.mappingPost(this);
-    }
-
     public void mappingCategory(Category category) {
         this.category = category;
         category.mappingPost(this);
