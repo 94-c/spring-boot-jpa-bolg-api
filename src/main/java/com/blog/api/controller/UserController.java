@@ -39,6 +39,9 @@ public class UserController {
 
         return SuccessResponse.success(UserDto.builder()
                 .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .createdAt(user.getDate().getCreatedAt())
                 .build());
     }
 

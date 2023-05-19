@@ -25,11 +25,12 @@ public class UserService implements UserDetailsService {
     public User createUser(SingUpDto signupDTO) {
         User user = User.builder()
                 .email(signupDTO.getEmail())
-                .name(signupDTO.getNickname())
+                .name(signupDTO.getName())
                 .date(LocalDate.builder()
                         .createdAt(LocalDateTime.now())
                         .build())
                 .enabled(true)
+                .authority("ROLE_USER")
                 .build();
 
         user.encryptPassword(signupDTO.getPassword());
