@@ -6,21 +6,28 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryDto {
-
     private Long id;
     private String name;
-    private String value;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private Integer parentId;
+
+    private List<PostDto> postList;
 
     public static CategoryDto convertToCategoryDto(Category category) {
         return CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())
-                .value(category.getValue())
+                .createdAt(category.getDate().getCreatedAt())
+                .updatedAt(category.getDate().getUpdateAt())
                 .build();
     }
 

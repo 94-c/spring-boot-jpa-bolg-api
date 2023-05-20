@@ -25,11 +25,11 @@ public class Comment {
     private Integer parentId;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_user_comment"))
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_comment"))
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Embedded

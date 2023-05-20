@@ -1,29 +1,90 @@
 package com.blog.api.service;
 
 import com.blog.api.dto.CategoryDto;
+import com.blog.api.dto.PostDto;
 import com.blog.api.entity.Category;
+import com.blog.api.entity.common.LocalDate;
+import com.blog.api.exception.NotFoundException;
 import com.blog.api.repository.CategoryRepository;
-import com.blog.api.repository.PostRepository;
+import com.blog.api.util.resource.PageResource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
 
+    private final static String DEFAULT_CATEGORY = "Default";
+
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public List<CategoryDto> postByCategoryList() {
-        List<Category> categoryList = categoryRepository.findAll();
+    public PageResource<CategoryDto> findAllCategories(int pageNo, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
-        Stream<Category> stream = categoryList.stream();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
-        return stream.map(CategoryDto::convertToCategoryDto).collect(Collectors.toList());
+        Page<Category> categories = categoryRepository.findAll(pageable);
+
+        List<Category> listOfCategories = categories.getContent();
+
+        List<CategoryDto> content = listOfCategories.stream().map(CategoryDto::convertToCategoryDto).collect(Collectors.toList());
+
+        PageResource<CategoryDto> pageResource = new PageResource<>();
+
+        pageResource.setContent(content);
+        pageResource.setPageNo(pageNo);
+        pageResource.setPageSize(pageSize);
+        pageResource.setTotalElements(categories.getTotalElements());
+        pageResource.setTotalPages(categories.getTotalPages());
+        pageResource.setLast(pageResource.isLast());
+
+        return pageResource;
     }
+
+
+    public CategoryDto createCategory(CategoryDto dto) {
+        Category category = Category.builder()
+                .name(dto.getName())
+                .date(LocalDate.builder()
+                        .createdAt(LocalDateTime.now())
+                        .build())
+                .build();
+
+        Category createCategory = categoryRepository.save(category);
+
+        return CategoryDto.builder()
+                .id(createCategory.getId())
+                .name(createCategory.getName())
+                .createdAt(createCategory.getDate().getCreatedAt())
+                .build();
+    }
+
+    public CategoryDto getCategory(Long categoryId) {
+        Optional<Category> findByCategoryId = categoryRepository.findById(categoryId);
+
+        Category findByCategory = findByCategoryId.orElseThrow(() -> new NotFoundException(404, "해당 카테고리가 존재 하지 않습니다."));
+
+        //TODO 자식 카테고리도 출력 해야 함.
+
+        return CategoryDto.builder()
+                .id(findByCategory.getId())
+                .name(findByCategory.getName())
+                .createdAt(findByCategory.getDate().getCreatedAt())
+                .updatedAt(findByCategory.getDate().getUpdateAt())
+                .build();
+    }
+
+
 }

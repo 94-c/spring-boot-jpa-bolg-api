@@ -2,10 +2,8 @@ package com.blog.api.dto;
 
 import com.blog.api.entity.Post;
 import lombok.*;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import javax.validation.constraints.NotBlank;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,7 +37,8 @@ public class PostDto {
                 .createdAt(post.getDate().getCreatedAt())
                 .updatedAt(post.getDate().getUpdateAt())
                 .user(UserDto.convertToUserDTO(post.getUser()))
-                //.category(CategoryDto.convertToCategoryDto(post.getCategory()).getName())
                 .build();
     }
+
+
 }

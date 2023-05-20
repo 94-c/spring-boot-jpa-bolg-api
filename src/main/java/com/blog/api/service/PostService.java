@@ -90,17 +90,17 @@ public class PostService {
     public PostDto getPost(Long postId) {
         Optional<Post> findByPostId = postRepository.findById(postId);
 
-        Post findPost = findByPostId.orElseThrow(() -> new NotFoundException(404, "해당 포스트가 존재하지 않습니다."));
+        Post findByPost = findByPostId.orElseThrow(() -> new NotFoundException(404, "해당 포스트가 존재하지 않습니다."));
 
-        List<CommentDto> commentDtos = CommentDto.convertToCommentDtoList(findPost.getComments());
+        List<CommentDto> commentDtos = CommentDto.convertToCommentDtoList(findByPost.getComments());
 
         return PostDto.builder()
-                .id(findPost.getId())
-                .user(UserDto.convertToUserDTO(findPost.getUser()))
-                .title(findPost.getTitle())
-                .content(findPost.getContent())
+                .id(findByPost.getId())
+                .user(UserDto.convertToUserDTO(findByPost.getUser()))
+                .title(findByPost.getTitle())
+                .content(findByPost.getContent())
                 .commentList(commentDtos)
-                .createdAt(findPost.getDate().getCreatedAt())
+                .createdAt(findByPost.getDate().getCreatedAt())
                 .build();
     }
 

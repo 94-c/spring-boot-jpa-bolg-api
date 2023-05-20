@@ -2,6 +2,8 @@ package com.blog.api.entity;
 
 import com.blog.api.entity.common.LocalDate;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,6 +35,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
@@ -45,11 +48,6 @@ public class Post {
 
     public void changeContent(String content) {
         this.content = content;
-    }
-
-    public void mappingCategory(Category category) {
-        this.category = category;
-        category.mappingPost(this);
     }
 
     public void mappingComment(Comment comment) {
