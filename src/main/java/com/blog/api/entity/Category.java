@@ -38,6 +38,10 @@ public class Category {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.REMOVE)
     private List<Post> posts  = new ArrayList<>();
 
+    public void changeName(String name) {
+        this.name = name;
+    }
+
     public void mappingPost(Post post) {
         this.posts.add(post);
     }

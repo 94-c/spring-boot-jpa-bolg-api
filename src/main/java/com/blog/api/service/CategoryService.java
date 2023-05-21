@@ -86,5 +86,22 @@ public class CategoryService {
                 .build();
     }
 
+    public CategoryDto updateCategory(Long categoryId, CategoryDto dto) {
+        Optional<Category> findByCategoryId = categoryRepository.findById(categoryId);
+
+        Category findByCategory = findByCategoryId.orElseThrow(() -> new NotFoundException(404, "해당 카테고리가 존재 하지 않습니다."));
+
+        findByCategory.changeName(dto.getName());
+        findByCategory.getDate().changeUpdateAt(LocalDateTime.now());
+
+        Category updateCategory = categoryRepository.save(findByCategory);
+
+        return CategoryDto.builder()
+                .id(updateCategory.getId())
+                .name(updateCategory.getName())
+                .createdAt(updateCategory.getDate().getCreatedAt())
+                .updatedAt(updateCategory.getDate().getUpdateAt())
+                .build();
+    }
 
 }
