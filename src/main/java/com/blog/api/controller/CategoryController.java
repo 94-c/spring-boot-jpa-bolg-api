@@ -17,11 +17,4 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/post-category")
-    @ResponseStatus(value = HttpStatus.OK)
-    public SuccessResponse<List<CategoryDto>> postByCategoryList() {
-        List<CategoryDto> postCategoryDTOList = categoryService.postByCategoryList();
-
-        return SuccessResponse.success(postCategoryDTOList);
-    }
 }
