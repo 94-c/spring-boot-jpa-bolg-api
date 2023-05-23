@@ -64,11 +64,11 @@ public class CategoryService {
 
         Category category = Category.builder()
                 .name(dto.getName())
+                .userId(user.getId())
                 .date(LocalDate.builder()
                         .createdAt(LocalDateTime.now())
                         .build())
                 .build();
-        category.mappingUser(user);
 
         Category createCategory = categoryRepository.save(category);
 

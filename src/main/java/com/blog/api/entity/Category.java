@@ -32,9 +32,8 @@ public class Category {
     @Column(name = "parent_id")
     private Integer parentId;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Embedded
     private LocalDate date;
@@ -50,9 +49,4 @@ public class Category {
         this.posts.add(post);
     }
 
-    public void mappingUser(User user) {
-        this.user = user;
-
-        user.mappingCategory(this);
-    }
 }

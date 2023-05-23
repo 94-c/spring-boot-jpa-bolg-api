@@ -21,7 +21,7 @@ public class CategoryDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Integer parentId;
-    private UserDto user;
+    private Long userId;
 
     private List<PostDto> postList;
 
@@ -29,7 +29,7 @@ public class CategoryDto {
         return CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())
-                .user(UserDto.convertToUserDTO(category.getUser()))
+                .userId(category.getUserId())
                 .createdAt(category.getDate().getCreatedAt())
                 .updatedAt(category.getDate().getUpdateAt())
                 .build();
