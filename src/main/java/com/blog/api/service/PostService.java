@@ -77,13 +77,7 @@ public class PostService {
 
         Post createPost = postRepository.save(post);
 
-        return PostDto.builder()
-                .id(createPost.getId())
-                .userId(createPost.getUserId())
-                .title(createPost.getTitle())
-                .content(createPost.getContent())
-                .createdAt(createPost.getDate().getCreatedAt())
-                .build();
+        return PostDto.convertToPostDto(createPost);
     }
 
     public PostDto getPost(Long postId) {
@@ -92,6 +86,9 @@ public class PostService {
         Post findByPost = findByPostId.orElseThrow(() -> new NotFoundException(404, "해당 포스트가 존재하지 않습니다."));
 
         List<CommentDto> commentDtos = CommentDto.convertToCommentDtoList(findByPost.getComments());
+
+        //TODO 대댓글도 출력해야함.
+
 
         return PostDto.builder()
                 .id(findByPost.getId())
@@ -103,8 +100,10 @@ public class PostService {
                 .build();
     }
 
-    public PostDto updatePost(Long postId, PostDto dto) {
-        Optional<Post> findByPostId = postRepository.findById(postId);
+    public PostDto updatePost(Long postId, PostDto dto, String email) {
+        User findUser = getUserInfo(email);
+
+        Optional<Post> findByPostId = postRepository.findByIdAndUserId(postId, findUser.getId());
 
         Post post = findByPostId.orElseThrow(() -> new NotFoundException(404, "해당 포스트가 존재하지 않습니다."));
 

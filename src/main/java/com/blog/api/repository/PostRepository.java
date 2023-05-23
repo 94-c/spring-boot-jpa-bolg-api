@@ -12,11 +12,10 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @EntityGraph(attributePaths = {"category", "user"})
     @Override
     Optional<Post> findById(Long postId);
 
-    @EntityGraph(attributePaths = {"user", "category"})
+    Optional<Post> findByIdAndUserId(Long postId, Long userId);
     @Override
     List<Post> findAll(Sort sort);
 

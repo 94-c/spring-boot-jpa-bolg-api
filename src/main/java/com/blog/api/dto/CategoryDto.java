@@ -1,6 +1,7 @@
 package com.blog.api.dto;
 
 import com.blog.api.entity.Category;
+import com.blog.api.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,13 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 public class CategoryDto {
     private Long id;
-    @NotBlank
+    @NotBlank(message = "카테고리명을 작성해주세요.")
     private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Integer parentId;
     private Long userId;
-
     private List<PostDto> postList;
 
     public static CategoryDto convertToCategoryDto(Category category) {

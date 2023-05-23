@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,11 +82,14 @@ public class CategoryService {
 
         Category findByCategory = findByCategoryId.orElseThrow(() -> new NotFoundException(404, "해당 카테고리가 존재 하지 않습니다."));
 
+        List<PostDto> postDtos = PostDto.convertToPostDtoList(findByCategory.getPosts());
+
         //TODO 자식 카테고리도 출력 해야 함.
 
         return CategoryDto.builder()
                 .id(findByCategory.getId())
                 .name(findByCategory.getName())
+                .postList(postDtos)
                 .createdAt(findByCategory.getDate().getCreatedAt())
                 .updatedAt(findByCategory.getDate().getUpdateAt())
                 .build();

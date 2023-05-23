@@ -8,7 +8,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -40,6 +42,17 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
+
+    @Column(nullable = true)
+    private int liked; // 좋아요 수
+
     //Setter
     public void changeTitle(String title) {
         this.title = title;
@@ -53,5 +66,20 @@ public class Post {
         this.comments.add(comment);
     }
 
+    public void mappingTag(Tag tag) {
+        this.tags.add(tag);
+    }
 
+    //게시물 좋아요
+    public void increaseLikeCount() {
+        this.liked += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.liked -= 1;
+    }
+
+    public void setLiked(int liked) {
+        this.liked = liked;
+    }
 }

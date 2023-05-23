@@ -61,9 +61,15 @@ public class UserController {
         myCookie.setMaxAge(300);
         response.addCookie(myCookie);
 
+        System.out.println(authentication.getName());
+
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        SuccessResponse<TokenDto> successResponse = SuccessResponse.success(TokenDto.builder().token(token).build());
+        //TODO 추후 서비스단으로 옮겨서 로직처리 할지 의문?
+        SuccessResponse<TokenDto> successResponse = SuccessResponse.success(TokenDto.builder()
+                .token(token)
+                .email(authentication.getName())
+                .build());
 
         return new ResponseEntity<>(successResponse, httpHeaders, HttpStatus.OK);
     }

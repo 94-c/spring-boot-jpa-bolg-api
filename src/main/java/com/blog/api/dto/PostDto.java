@@ -6,6 +6,8 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,6 +31,7 @@ public class PostDto {
 
     private List<CommentDto> commentList;
 
+    //Entity To Dto
     public static PostDto convertToPostDto(Post post) {
         return PostDto.builder()
                 .id(post.getId())
@@ -40,5 +43,11 @@ public class PostDto {
                 .build();
     }
 
+    //Entity To DtoList
+    public static List<PostDto> convertToPostDtoList(List<Post> posts) {
+        Stream<Post> stream = posts.stream();
+
+        return stream.map(PostDto::convertToPostDto).collect(Collectors.toList());
+    }
 
 }

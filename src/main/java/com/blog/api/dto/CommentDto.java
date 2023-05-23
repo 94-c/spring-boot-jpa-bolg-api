@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class CommentDto {
 
     private Long id;
-    @NotBlank
+    @NotBlank(message = "댓글을 작성해주세요.")
     private String content;
     private Long userId;
     private LocalDateTime createdAt;
@@ -29,6 +29,8 @@ public class CommentDto {
                 .id(comment.getId())
                 .content(comment.getContent())
                 .userId(comment.getUserId())
+                .createdAt(comment.getDate().getCreatedAt())
+                .updatedAt(comment.getDate().getUpdateAt())
                 .build();
     }
 

@@ -38,8 +38,6 @@ public class CommentService {
 
         Post post = findByPost.orElseThrow(() -> new NotFoundException(404, "게시물을 찾을 수 없습니다."));
 
-        Optional<User> findByUser = userRepository.findByEmail(email);
-
         User user = getUserInfo(email);
 
         Comment comment = Comment.builder()

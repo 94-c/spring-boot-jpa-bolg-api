@@ -28,11 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JwtFilter customFilter = new JwtFilter(tokenProvider);
         http
                 .authorizeRequests()
-                .antMatchers("/login")
-                .permitAll()
-                .antMatchers("/signup")
-                .permitAll()
-                .antMatchers("/confirm-email")
+                .antMatchers("/login", "/signup", "/confirm-email")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

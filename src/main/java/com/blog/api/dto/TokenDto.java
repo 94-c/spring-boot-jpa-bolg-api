@@ -13,4 +13,7 @@ public class TokenDto {
 
     private String token;
 
+    private String email;
+
+
 }

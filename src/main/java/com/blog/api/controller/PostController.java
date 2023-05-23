@@ -34,7 +34,6 @@ public class PostController {
     @PostMapping("posts")
     @ResponseStatus(value = HttpStatus.CREATED)
     public SuccessResponse<PostDto> createPost(@Valid @RequestBody PostDto postDTO, Principal principal) {
-        log.info(principal.getName());
 
         PostDto post = postService.createPost(postDTO, principal.getName());
 
@@ -51,8 +50,11 @@ public class PostController {
 
     @PutMapping("posts/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public SuccessResponse<PostDto> updatePost(@Valid @RequestBody PostDto postDTO, @PathVariable(name = "id") Long postId) {
-        PostDto post = postService.updatePost(postId, postDTO);
+    public SuccessResponse<PostDto> updatePost(@Valid @RequestBody PostDto postDTO,
+                                               @PathVariable(name = "id") Long postId,
+                                               Principal principal) {
+
+        PostDto post = postService.updatePost(postId, postDTO, principal.getName());
 
         return SuccessResponse.success(post);
     }
