@@ -28,19 +28,16 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
     @Embedded
     private LocalDate date;
 
-    public void mappingPostAndUser(Post post, User user) {
+    public void mappingPost(Post post) {
         this.post = post;
-        this.user = user;
 
         post.mappingComment(this);
-        user.mappingComment(this);
     }
 
     public void changeContent(String content) {

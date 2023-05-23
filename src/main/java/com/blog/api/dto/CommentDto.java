@@ -18,7 +18,7 @@ public class CommentDto {
     private Long id;
     @NotBlank
     private String content;
-    private UserDto user;
+    private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -28,7 +28,7 @@ public class CommentDto {
         return CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
-                .user(UserDto.convertToUserDTO(comment.getUser()))
+                .userId(comment.getUserId())
                 .build();
     }
 

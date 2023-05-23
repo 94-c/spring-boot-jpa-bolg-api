@@ -26,6 +26,13 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    private User getUserInfo(String email) {
+        Optional<User> byEmail = userRepository.findByEmail(email);
+
+        return byEmail.orElseThrow(() -> new NotFoundException(404, "유저가 없습니다."));
+    }
+
+
     public CommentDto createComment(Long postId, CommentDto dto, String email) {
         Optional<Post> findByPost = postRepository.findById(postId);
 
@@ -33,15 +40,16 @@ public class CommentService {
 
         Optional<User> findByUser = userRepository.findByEmail(email);
 
-        User user = findByUser.orElseThrow(() -> new NotFoundException(404, "유저를 찾을 수 없습니다."));
+        User user = getUserInfo(email);
 
         Comment comment = Comment.builder()
                 .content(dto.getContent())
+                .userId(user.getId())
                 .date(LocalDate.builder()
                         .createdAt(LocalDateTime.now())
                         .build())
                 .build();
-        comment.mappingPostAndUser(post, user);
+        comment.mappingPost(post);
 
         Comment createComment = commentRepository.save(comment);
 
@@ -60,7 +68,7 @@ public class CommentService {
         return CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
-                .user(UserDto.convertToUserDTO(findByComment.get().getUser()))
+                .userId(comment.getUserId())
                 .createdAt(comment.getDate().getCreatedAt())
                 .updatedAt(comment.getDate().getUpdateAt())
                 .build();
@@ -83,7 +91,7 @@ public class CommentService {
         return CommentDto.builder()
                 .id(updateComment.getId())
                 .content(updateComment.getContent())
-                .user(UserDto.convertToUserDTO(updateComment.getUser()))
+                .userId(updateComment.getUserId())
                 .updatedAt(updateComment.getDate().getUpdateAt())
                 .build();
     }

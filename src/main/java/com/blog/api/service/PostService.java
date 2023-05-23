@@ -30,7 +30,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final CategoryRepository categoryRepository;
 
     private User getUserInfo(String email) {
         Optional<User> byEmail = userRepository.findByEmail(email);
@@ -68,7 +67,7 @@ public class PostService {
         User findUser = getUserInfo(email);
 
         Post post = Post.builder()
-                .user(findUser)
+                .userId(findUser.getId())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .date(LocalDate.builder()
@@ -80,7 +79,7 @@ public class PostService {
 
         return PostDto.builder()
                 .id(createPost.getId())
-                .user(UserDto.convertToUserDTO(createPost.getUser()))
+                .userId(createPost.getUserId())
                 .title(createPost.getTitle())
                 .content(createPost.getContent())
                 .createdAt(createPost.getDate().getCreatedAt())
@@ -96,7 +95,7 @@ public class PostService {
 
         return PostDto.builder()
                 .id(findByPost.getId())
-                .user(UserDto.convertToUserDTO(findByPost.getUser()))
+                .userId(findByPost.getId())
                 .title(findByPost.getTitle())
                 .content(findByPost.getContent())
                 .commentList(commentDtos)
@@ -117,7 +116,7 @@ public class PostService {
 
         return PostDto.builder()
                 .id(updatePost.getId())
-                .user(UserDto.convertToUserDTO(updatePost.getUser()))
+                .userId(updatePost.getUserId())
                 .title(updatePost.getTitle())
                 .content(updatePost.getContent())
                 .createdAt(updatePost.getDate().getCreatedAt())

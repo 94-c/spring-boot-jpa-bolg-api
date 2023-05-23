@@ -23,7 +23,7 @@ public class PostDto {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-    private UserDto user;
+    private Long userId;
     @NotBlank(message = "카테고리를 선택해주세요.")
     private String category;
 
@@ -36,7 +36,7 @@ public class PostDto {
                 .content(post.getContent())
                 .createdAt(post.getDate().getCreatedAt())
                 .updatedAt(post.getDate().getUpdateAt())
-                .user(UserDto.convertToUserDTO(post.getUser()))
+                .userId(post.getUserId())
                 .build();
     }
 
