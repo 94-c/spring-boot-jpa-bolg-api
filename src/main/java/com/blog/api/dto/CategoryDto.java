@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,10 +16,12 @@ import java.util.List;
 @NoArgsConstructor
 public class CategoryDto {
     private Long id;
+    @NotBlank
     private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Integer parentId;
+    private UserDto user;
 
     private List<PostDto> postList;
 
@@ -26,6 +29,7 @@ public class CategoryDto {
         return CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())
+                .user(UserDto.convertToUserDTO(category.getUser()))
                 .createdAt(category.getDate().getCreatedAt())
                 .updatedAt(category.getDate().getUpdateAt())
                 .build();

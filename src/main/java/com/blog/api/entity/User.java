@@ -49,12 +49,19 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Notification> notifications = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Category> categories = new ArrayList<>();
+
     public void mappingPost(Post post) {
         posts.add(post);
     }
 
     public void mappingComment(Comment comment) {
         comments.add(comment);
+    }
+
+    public void mappingCategory(Category category) {
+        categories.add(category);
     }
 
     public void mappingNotification(Notification notification) {

@@ -3,9 +3,11 @@ package com.blog.api.service;
 import com.blog.api.dto.CategoryDto;
 import com.blog.api.dto.PostDto;
 import com.blog.api.entity.Category;
+import com.blog.api.entity.User;
 import com.blog.api.entity.common.LocalDate;
 import com.blog.api.exception.NotFoundException;
 import com.blog.api.repository.CategoryRepository;
+import com.blog.api.repository.UserRepository;
 import com.blog.api.util.resource.PageResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,7 @@ public class CategoryService {
     private final static String DEFAULT_CATEGORY = "Default";
 
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public PageResource<CategoryDto> findAllCategories(int pageNo, int pageSize, String sortBy, String sortDir) {
@@ -54,21 +57,23 @@ public class CategoryService {
     }
 
 
-    public CategoryDto createCategory(CategoryDto dto) {
+    public CategoryDto createCategory(CategoryDto dto, String email) {
+        Optional<User> findByUser = userRepository.findByEmail(email);
+
+        User user = findByUser.orElseThrow(() -> new NotFoundException(404, "유저를 찾을 수 없습니다."));
+
         Category category = Category.builder()
                 .name(dto.getName())
                 .date(LocalDate.builder()
                         .createdAt(LocalDateTime.now())
                         .build())
                 .build();
+        category.mappingUser(user);
 
         Category createCategory = categoryRepository.save(category);
 
-        return CategoryDto.builder()
-                .id(createCategory.getId())
-                .name(createCategory.getName())
-                .createdAt(createCategory.getDate().getCreatedAt())
-                .build();
+
+        return CategoryDto.convertToCategoryDto(createCategory);
     }
 
     public CategoryDto getCategory(Long categoryId) {
@@ -102,6 +107,14 @@ public class CategoryService {
                 .createdAt(updateCategory.getDate().getCreatedAt())
                 .updatedAt(updateCategory.getDate().getUpdateAt())
                 .build();
+    }
+
+    public void deleteCategory(Long categoryId) {
+        Optional<Category> findByCategoryId = categoryRepository.findById(categoryId);
+
+        Category category = findByCategoryId.orElseThrow(() -> new NotFoundException(404, "해당 카테고리가 존재하지 않습니다."));
+
+        categoryRepository.delete(category);
     }
 
 }
