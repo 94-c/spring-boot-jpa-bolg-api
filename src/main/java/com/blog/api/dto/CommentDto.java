@@ -22,6 +22,7 @@ public class CommentDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    private List<SubCommentDto> subCommentDtoList;
 
     // Entity To Dto
     public static CommentDto convertToCommentDto(Comment comment) {

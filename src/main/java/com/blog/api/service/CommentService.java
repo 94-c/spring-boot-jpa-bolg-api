@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -63,12 +64,16 @@ public class CommentService {
 
         Comment comment = findByComment.orElseThrow(() -> new NotFoundException(404, "해당 댓글 존재하지 않습니다."));
 
+        //commentRepository에서 parent_id 값으로 select 할 수 있도록 코드 작성
+        List<Comment> subComment = commentRepository.findBy(comment.getId());
+
         return CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
                 .userId(comment.getUserId())
                 .createdAt(comment.getDate().getCreatedAt())
                 .updatedAt(comment.getDate().getUpdateAt())
+                .subCommentDtoList()
                 .build();
     }
 
