@@ -24,7 +24,7 @@ public class CommentDto {
 
 
     // Entity To Dto
-    public static CommentDto converToCommentDto(Comment comment) {
+    public static CommentDto convertToCommentDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
@@ -38,7 +38,7 @@ public class CommentDto {
     public static List<CommentDto> convertToCommentDtoList(List<Comment> comments) {
         Stream<Comment> stream = comments.stream();
 
-        return stream.map(CommentDto::converToCommentDto).collect(Collectors.toList());
+        return stream.map(CommentDto::convertToCommentDto).collect(Collectors.toList());
     }
 
 

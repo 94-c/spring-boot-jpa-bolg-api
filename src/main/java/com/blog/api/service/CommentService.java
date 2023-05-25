@@ -51,7 +51,7 @@ public class CommentService {
 
         Comment createComment = commentRepository.save(comment);
 
-        return CommentDto.converToCommentDto(createComment);
+        return CommentDto.convertToCommentDto(createComment);
     }
 
     public CommentDto getComment(Long postId, Long commentId) {

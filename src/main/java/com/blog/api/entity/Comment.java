@@ -22,7 +22,7 @@ public class Comment {
     private String content;
 
     @Column(name = "parent_id")
-    private Integer parentId;
+    private Long parentId;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
