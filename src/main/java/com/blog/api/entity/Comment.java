@@ -5,6 +5,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -34,6 +37,9 @@ public class Comment {
     @Embedded
     private LocalDate date;
 
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
+    private List<Comment> subComments = new ArrayList<>();
+
     public void mappingPost(Post post) {
         this.post = post;
 
@@ -43,4 +49,5 @@ public class Comment {
     public void changeContent(String content) {
         this.content = content;
     }
+
 }
