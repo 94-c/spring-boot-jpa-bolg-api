@@ -85,7 +85,6 @@ public class CategoryService {
         List<PostDto> postDtos = PostDto.convertToPostDtoList(findByCategory.getPosts());
 
         //TODO 자식 카테고리도 출력 해야 함.
-
         return CategoryDto.builder()
                 .id(findByCategory.getId())
                 .name(findByCategory.getName())
