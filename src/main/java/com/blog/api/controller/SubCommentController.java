@@ -17,40 +17,45 @@ public class SubCommentController {
 
     private final SubCommentService subCommentService;
 
-    @PostMapping("posts/{id}/comments")
+    @PostMapping("posts/{id}/comments/{commentId}")
     @ResponseStatus(value = HttpStatus.CREATED)
     public SuccessResponse<CommentDto> createSubComment(@PathVariable(name = "id") Long postId,
-                                                     @Valid @RequestBody CommentDto commentDto,
-                                                     Principal principal) {
-        CommentDto comment = commentService.createComment(postId, commentDto, principal.getName());
+                                                        @PathVariable(name = "commentId") Long commentId,
+                                                        @Valid @RequestBody CommentDto commentDto,
+                                                        Principal principal) {
+        CommentDto subComment = subCommentService.createSubComment(postId, commentId, commentDto, principal.getName());
 
-        return SuccessResponse.success(comment);
+        return SuccessResponse.success(subComment);
     }
 
     @GetMapping("posts/{id}/comments/{commentId}")
     @ResponseStatus(value = HttpStatus.OK)
     public SuccessResponse<CommentDto> getSubComment(@PathVariable(name = "id") Long postId,
-                                                  @PathVariable(name = "commentId") Long commentId) {
-        CommentDto comment = commentService.getComment(postId, commentId);
+                                                     @PathVariable(name = "commentId") Long commentId) {
 
-        return SuccessResponse.success(comment);
+        CommentDto subComment = subCommentService.getSubComment(postId, commentId);
+
+        return SuccessResponse.success(subComment);
     }
 
-    @PutMapping("posts/{id}/comments/{commentId}")
+    @PutMapping("posts/{id}/comments/{commentId}/subComment/{subCommentId}")
     @ResponseStatus(value = HttpStatus.OK)
     public SuccessResponse<CommentDto> updateSubComment(@Valid @RequestBody CommentDto dto,
-                                                     @PathVariable(name = "id") Long postId,
-                                                     @PathVariable(name = "commentId") Long commentId) {
-        CommentDto updateComment = commentService.updateComment(postId, commentId, dto);
+                                                        @PathVariable(name = "id") Long postId,
+                                                        @PathVariable(name = "commentId") Long commentId,
+                                                        @PathVariable(name = "subCommentId") Long subCommentId) {
 
-        return SuccessResponse.success(updateComment);
+        CommentDto updateSubComment = subCommentService.updateSubComment(postId, commentId, subCommentId, dto);
+
+        return SuccessResponse.success(updateSubComment);
     }
 
-    @DeleteMapping("posts/{id}/comments/{commentId}")
+    @DeleteMapping("posts/{id}/comments/{commentId}/subComment/{subCommentId}")
     @ResponseStatus(value = HttpStatus.OK)
     public SuccessResponse<String> deleteSubComment(@PathVariable(name = "id") Long postId,
-                                                 @PathVariable(name = "commentId") Long commentId) {
-        commentService.deleteComment(postId, commentId);
+                                                    @PathVariable(name = "commentId") Long commentId,
+                                                    @PathVariable(name = "subCommentId") Long subCommentId) {
+        subCommentService.deleteSubComment(postId, commentId, subCommentId);
 
         return SuccessResponse.success(null);
     }

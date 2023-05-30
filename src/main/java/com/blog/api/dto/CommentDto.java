@@ -21,7 +21,7 @@ public class CommentDto {
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
+    private Long parentId;
     private List<Comment> subCommentDtoList;
 
     // Entity To Dto
