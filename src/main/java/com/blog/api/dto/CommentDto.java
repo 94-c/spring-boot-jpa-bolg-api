@@ -35,6 +35,17 @@ public class CommentDto {
                 .build();
     }
 
+    public static CommentDto convertToSubCommentDto(Comment comment) {
+        return CommentDto.builder()
+                .id(comment.getId())
+                .parentId(comment.getParentId())
+                .content(comment.getContent())
+                .userId(comment.getUserId())
+                .createdAt(comment.getDate().getCreatedAt())
+                .updatedAt(comment.getDate().getUpdateAt())
+                .build();
+    }
+
     //Entity To DtoList
     public static List<CommentDto> convertToCommentDtoList(List<Comment> comments) {
         Stream<Comment> stream = comments.stream();

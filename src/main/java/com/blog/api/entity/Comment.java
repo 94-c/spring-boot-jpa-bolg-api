@@ -37,9 +37,6 @@ public class Comment {
     @Embedded
     private LocalDate date;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
-    private List<Comment> subComments = new ArrayList<>();
-
     public void mappingPost(Post post) {
         this.post = post;
 

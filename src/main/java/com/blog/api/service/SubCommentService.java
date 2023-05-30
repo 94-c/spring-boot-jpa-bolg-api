@@ -53,15 +53,15 @@ public class SubCommentService {
 
         Comment createComment = commentRepository.save(comment);
 
-        return CommentDto.convertToCommentDto(createComment);
+        return CommentDto.convertToSubCommentDto(createComment);
     }
 
-    public CommentDto getSubComment(Long postId, Long commentId) {
+    public CommentDto getSubComment(Long postId, Long commentId, Long parentId) {
         Optional<Post> findByPost = postRepository.findById(postId);
 
         findByPost.orElseThrow(() -> new NotFoundException(404, "해당 포스트가 존재하지 않습니다."));
 
-        Optional<Comment> findBySubComment = commentRepository.findByParentId(commentId);
+        Optional<Comment> findBySubComment = commentRepository.findByIdAndParentId(commentId, parentId);
 
         Comment subComment = findBySubComment.orElseThrow(() -> new NotFoundException(404, "해당 댓글 존재하지 않습니다."));
 
@@ -80,27 +80,16 @@ public class SubCommentService {
 
         findByPost.orElseThrow(() -> new NotFoundException(404, "해당 포스트가 존재하지 않습니다."));
 
-        Optional<Comment> findByComment = commentRepository.findById(commentId);
+        Optional<Comment> findByComment = commentRepository.findByIdAndParentId(commentId, parentId);
 
-        findByComment.orElseThrow(() -> new NotFoundException(404, "해당 댓글 존재하지 않습니다."));
-
-        Optional<Comment> findBySubComment = commentRepository.findByParentId(parentId);
-
-        Comment subComment = findBySubComment.orElseThrow(() -> new NotFoundException(404, "해당 대댓글 존재하지 않습니다."));
+        Comment subComment = findByComment.orElseThrow(() -> new NotFoundException(404, "해당 대댓글 존재하지 않습니다."));
 
         subComment.changeContent(dto.getContent());
         subComment.getDate().changeUpdateAt(LocalDateTime.now());
 
         Comment updateSubComment = commentRepository.save(subComment);
 
-        return CommentDto.builder()
-                .id(updateSubComment.getId())
-                .parentId(updateSubComment.getParentId())
-                .content(updateSubComment.getContent())
-                .userId(updateSubComment.getUserId())
-                .createdAt(updateSubComment.getDate().getCreatedAt())
-                .updatedAt(updateSubComment.getDate().getUpdateAt())
-                .build();
+        return CommentDto.convertToSubCommentDto(updateSubComment);
     }
 
     public void deleteSubComment(Long postId, Long commentId, Long parentId) {
@@ -108,11 +97,7 @@ public class SubCommentService {
 
         findByPost.orElseThrow(() -> new NotFoundException(404, "해당 포스트가 존재하지 않습니다."));
 
-        Optional<Comment> findByComment = commentRepository.findById(commentId);
-
-        findByComment.orElseThrow(() -> new NotFoundException(404, "해당 댓글 존재하지 않습니다."));
-
-        Optional<Comment> findBySubComment = commentRepository.findByParentId(parentId);
+        Optional<Comment> findBySubComment = commentRepository.findByIdAndParentId(commentId, parentId);
 
         Comment subComment = findBySubComment.orElseThrow(() -> new NotFoundException(404, "해당 대댓글 존재하지 않습니다."));
 

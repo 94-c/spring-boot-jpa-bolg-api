@@ -28,12 +28,13 @@ public class SubCommentController {
         return SuccessResponse.success(subComment);
     }
 
-    @GetMapping("posts/{id}/comments/{commentId}")
+    @GetMapping("posts/{id}/comments/{commentId}/subComment/{subCommentId}")
     @ResponseStatus(value = HttpStatus.OK)
     public SuccessResponse<CommentDto> getSubComment(@PathVariable(name = "id") Long postId,
-                                                     @PathVariable(name = "commentId") Long commentId) {
+                                                     @PathVariable(name = "commentId") Long commentId,
+                                                     @PathVariable(name = "subCommentId") Long subCommentId) {
 
-        CommentDto subComment = subCommentService.getSubComment(postId, commentId);
+        CommentDto subComment = subCommentService.getSubComment(postId, commentId, subCommentId);
 
         return SuccessResponse.success(subComment);
     }
