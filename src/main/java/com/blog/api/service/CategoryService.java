@@ -53,7 +53,6 @@ public class CategoryService {
         pageResource.setTotalElements(categories.getTotalElements());
         pageResource.setTotalPages(categories.getTotalPages());
         pageResource.setLast(pageResource.isLast());
-
         return pageResource;
     }
 
